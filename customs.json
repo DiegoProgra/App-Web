@@ -1,6 +1,7 @@
 {
     "elements": {
-        "ol": {}
+        "ol": {},
+        "li": {}
     },
     "attributes": {}
 }

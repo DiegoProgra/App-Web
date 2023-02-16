@@ -1,37 +1,56 @@
 package com.TiendaM_IQ2023.controller;
 
-import com.TiendaM_IQ2023.dao.ClienteDao;
 import com.TiendaM_IQ2023.domain.Cliente;
-import java.util.Arrays;
-import java.util.List;
+import com.TiendaM_IQ2023.service.ClienteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Slf4j
 @Controller
 public class IndexController {
 
     @Autowired
-    ClienteDao clienteDao;
+    ClienteService clienteService;
 
     @GetMapping("/")
-
     public String inicio(Model model) {
-//        log.info("Ahora desde MVC");
-        //      model.addAttribute("Mensaje", "Hola desde el contorlador");
-        //    
-        //  Cliente cliente = new Cliente("Jonathan","Morales", "diego@gmail.com", "83206632");
-        //model.addAttribute("objetoCliente" , cliente);
+        log.info("Ahora desde MVC");
 
-        // Cliente  cliente2 =new Cliente("Diego","Morales", "diego@gmail.com", "83206632");
-        var clientes = clienteDao.findAll();
+        var clientes = clienteService.getClientes();
         model.addAttribute("clientes", clientes);
         return "index";
     }
 
+    @GetMapping("/nuevoCliente")
+    public String nuevoCLiente(Cliente cliente) {
+
+        return "modificarcliente";
+    }
+
+    @PostMapping("/guardarCliente")
+    public String guardarCliente(Cliente cliente) {
+
+        clienteService.save(cliente);
+        return "redirect:/";
+
+    }
+
+    @GetMapping("/modificarCliente/(idCliente)")
+    public String modificarCliente(Cliente cliente, Model model) {
+        cliente = clienteService.getCliente(cliente);
+        model.addAttribute("cliente", cliente);
+        return "modificarCliente";
+    }
+
+    @GetMapping("/eliminarCliente/(idCliente)")
+    public String eliminarCliente(Cliente cliente) {
+        clienteService.delete(cliente);
+
+        return "redirect:/";
+    }
 }

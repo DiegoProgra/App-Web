@@ -3,5 +3,9 @@
         "ol": {},
         "li": {}
     },
-    "attributes": {}
+    "attributes": {
+        "th:fragment": {
+            "context": "footer"
+        }
+    }
 }

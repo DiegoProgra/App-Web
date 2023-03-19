@@ -1,56 +1,39 @@
 package com.TiendaM_IQ2023.controller;
 
-import com.TiendaM_IQ2023.domain.Cliente;
-import com.TiendaM_IQ2023.service.ClienteService;
+import com.TiendaM_IQ2023.domain.Articulo;
+import com.TiendaM_IQ2023.service.ArticuloService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Slf4j
 @Controller
 public class IndexController {
-
+    
     @Autowired
-    ClienteService clienteService;
-
+    ArticuloService articuloService;
+    
     @GetMapping("/")
     public String inicio(Model model) {
         log.info("Ahora desde MVC");
-
-        var clientes = clienteService.getClientes();
-        model.addAttribute("clientes", clientes);
+    //    model.addAttribute("Mensaje", "Hola desde el controlador");
+        
+    //   Articulo articulo = new Articulo("Steven", "Serrano Marchena", "steven.sm1508@gmail.com", "85858585");
+    //   model.addAttribute("objetoArticulo", articulo);
+       
+    //  Articulo articulo2 = new Articulo("Juan", "Serrano Marchena", "steven.sm1508@gmail.com", "85858585");
+    //   Articulo articulo3 = new Articulo("Pedro", "Serrano Marchena", "steven.sm1508@gmail.com", "85858585");
+       
+    //   List<Articulo> articulos = Arrays.asList(articulo, articulo2, articulo3);
+    
+       var articulos = articuloService.getArticulos(true);
+       model.addAttribute("articulos", articulos);
+       
+       
         return "index";
-    }
-
-    @GetMapping("/nuevoCliente")
-    public String nuevoCLiente(Cliente cliente) {
-
-        return "modificarcliente";
-    }
-
-    @PostMapping("/guardarCliente")
-    public String guardarCliente(Cliente cliente) {
-
-        clienteService.save(cliente);
-        return "redirect:/";
-
-    }
-
-    @GetMapping("/modificarCliente/(idCliente)")
-    public String modificarCliente(Cliente cliente, Model model) {
-        cliente = clienteService.getCliente(cliente);
-        model.addAttribute("cliente", cliente);
-        return "modificarCliente";
-    }
-
-    @GetMapping("/eliminarCliente/(idCliente)")
-    public String eliminarCliente(Cliente cliente) {
-        clienteService.delete(cliente);
-
-        return "redirect:/";
+  
     }
 }

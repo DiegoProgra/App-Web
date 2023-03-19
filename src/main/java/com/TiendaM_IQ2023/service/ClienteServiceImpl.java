@@ -1,7 +1,9 @@
 package com.TiendaM_IQ2023.service;
 
-import com.TiendaM_IQ2023.dao.ClienteDao;
 import com.TiendaM_IQ2023.domain.Cliente;
+import com.TiendaM_IQ2023.dao.ClienteDao;
+import com.TiendaM_IQ2023.dao.CreditoDao;
+import com.TiendaM_IQ2023.domain.Credito;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,9 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ClienteServiceImpl implements ClienteService {
-
+    
     @Autowired
     ClienteDao clienteDao;
+    
+    @Autowired
+    CreditoDao creditoDao;
 
     @Override
     @Transactional(readOnly = true)
@@ -27,7 +32,11 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     @Transactional
-    public void save(Cliente cliente) {
+    public void save(Cliente cliente) { 
+        Credito credito = cliente.getCredito();
+         credito = creditoDao.save(credito); 
+        
+         cliente.setCredito(credito);
         clienteDao.save(cliente);
     }
 
@@ -36,4 +45,15 @@ public class ClienteServiceImpl implements ClienteService {
     public void delete(Cliente cliente) {
         clienteDao.deleteById(cliente.getIdCliente());
     }
+
+    //@Override
+    //public List<Cliente> getClientePorNombre(String nombre) {
+   //     return clienteDao.findByNombre(nombre);
+   // }
+
+    @Override
+    public List<Cliente> getClientePorApellidos(String apellidos) {
+        return clienteDao.findByApellidos(apellidos);
+    }
+    
 }

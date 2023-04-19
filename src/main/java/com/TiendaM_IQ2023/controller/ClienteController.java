@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/springframework/Controller.java to edit this template
+ */
 package com.TiendaM_IQ2023.controller;
 
 import com.TiendaM_IQ2023.domain.Cliente;
@@ -8,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+
 @Controller
 public class ClienteController {
     
@@ -16,15 +21,19 @@ public class ClienteController {
     
     @GetMapping("/cliente/listado")
     public String inicio(Model model) {
+        var clientes=clienteService.getClientes();
         
-        //var clientes = clienteService.getClientes();
-        //var clientes = clienteService.getClientePorNombre("Ana");
-        var clientes = clienteService.getClientePorApellidos("Castro Mora");
-       model.addAttribute("clientes", clientes);
-       
-       
+        var limiteTotal=0;
+        for (var c: clientes) {
+            limiteTotal+=c.getCredito().getLimite();
+        }
+        model.addAttribute("limiteTotal",limiteTotal);
+        model.addAttribute("totalClientes",clientes.size());
+        
+        model.addAttribute("clientes",clientes);
         return "/cliente/listado";
     }
+ 
     
     @GetMapping("/cliente/nuevo")
     public String nuevoCliente(Cliente cliente) {
@@ -48,6 +57,18 @@ public class ClienteController {
     public String eliminarCliente(Cliente cliente) {
         clienteService.delete(cliente);
         return "redirect:/cliente/listado";
+    }
+    
+    @GetMapping("/cliente/buscar")
+    public String buscar(Cliente cliente) {
+        return "/cliente/buscarCliente";
+    }
+    
+    @PostMapping("/cliente/busqueda")
+    public String busqueda(Cliente cliente, Model model){
+        var clientes = clienteService.getCliente(cliente.getNombre());
+        model.addAttribute("resultados", clientes);
+        return "/cliente/buscarCliente";
     }
 
 }
